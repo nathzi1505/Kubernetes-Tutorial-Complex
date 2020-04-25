@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+
+kind: Deployment
+metadata:
+    name: client-deployment
+
+spec:
+    replicas: 3
+    selector:
+        matchLabels: 
+            component: web
+    template:
+        metadata:
+            labels:
+                component: web
+        spec:
+            containers:
+                - name: client
+                  image: nathzi1505/multidockertutorial-client
+                  ports:
+                    - containerPort: 3000
+# ---
+# # Add another config file
+# apiVersion: v1
+# 
+# kind: Service
+# metadata:
+#     name: client-cluster-ip-service
+# 
+# spec:
+#     type: ClusterIP 
+#     selector:
+#         component: web
+#     ports:
+#         - port: 3000
+#             targetPort: 3000

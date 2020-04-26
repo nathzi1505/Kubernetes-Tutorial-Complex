@@ -1,0 +1,25 @@
+# HTTPS - Certificate
+# Certificate
+
+apiVersion: cert-manager.io/v1alpha2
+
+kind: Certificate
+metadata:
+    name: test-nathzi1505-xyz-tls
+
+spec:
+    secretName: test-nathzi1505-xyz
+    issuerRef:
+        name: letsencrypt-prod
+        kind: ClusterIssuer
+    commonName: test.nathzi1505.xyz
+    dnsNames:
+        - test.nathzi1505.xyz
+        - www.test.nathzi1505.xyz
+    acme:
+        config:
+            - http01:
+                ingressClass: nginx
+              domains:
+                - test.nathzi1505.xyz
+                - www.test.nathzi1505.xyz

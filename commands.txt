@@ -1,0 +1,36 @@
+# Kubernetes Secrets
+$ kubectl create secret generic <secret_name> --from-literal key=value
+eg. kubectl create secret generic pgpassword --from-literal PGPASSWORD=postgrespassword
+
+# Ingess in Minikube
+$ minikube addons enable ingress
+
+# Travis CI CLI
+$ travis login
+$ travis encrypt-file service-account.json --com
+ 
+## Google Cloud Platform - Integration 
+# Google Cloud CLI config
+$ gcloud config set project test-and-tutorials
+$ gcloud config set compute/zone asia-east1-a
+$ gcloud container clusters get-credentials kubernetes-tutorial-complex
+$ kubectl create secret generic pgpassword --from-literal PGPASSWORD=postgrespassword
+
+# Helm v3 Installation
+$ curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+$ chmod 700 get_helm.sh
+$ ./get_helm.sh
+$ helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+$ helm install my-nginx stable/nginx-ingress --set rbac.create=true 
+
+# Service Account and Cluster Role Binding (ignore for Helm v3)
+$ kubectl create serviceaccount --namespace kube-system tiller
+$ kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+$ heml init --service-account tiller --upgrade
+
+# HTTPS - Certificate Manager Installation (via Helm v3)
+$ kubectl apply --validate=false -f https://raw.githubusercontent.com/jetstack/cert-manager/release-0.11/deploy/manifests/00-crds.yaml
+$ kubectl create namespace cert-manager
+$ helm repo add jetstack https://charts.jetstack.io
+$ helm repo update
+$ helm install cert-manager --namespace cert-manager --version v0.11.0 jetstack/cert-manager

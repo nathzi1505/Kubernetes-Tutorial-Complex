@@ -1,0 +1,35 @@
+language: generic 
+sudo: required
+services:
+    - docker
+env:
+    global:
+        - SHA=$(git rev-parse HEAD)
+        - CLOUDSDK_CORE_DISABLE_PROMPTS=1
+before_install:
+    # Decrypt Service Account JSON file
+    - openssl aes-256-cbc -K $encrypted_9f3b5599b056_key -iv $encrypted_9f3b5599b056_iv -in service-account.json.enc -out service-account.json -d
+
+    # Install Google Cloud SDK
+    - curl https://sdk.cloud.google.com | bash > /dev/null
+    - source $HOME/google-cloud-sdk/path.bash.inc
+    - gcloud components update kubectl
+    - gcloud auth activate-service-account --key-file service.account.json
+
+    # Configure Google Cloud CLI
+    - gcloud config set project test-and-tutorials
+    - gcloud config set compute/zone asia-east1-a
+    - gcloud container clusters get-credentials kubernetes-tutorial-complex
+
+    # Login to the Docker CLI
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+    
+    # Build Test image
+    - docker build -t nathzi1505/travis -f ./client/Dockerfile.dev ./client
+script:
+    - docker run -e CI=true nathzi1505/travis npm test    
+deploy:
+    provider: script
+    script: bash ./deploy.sh 
+    on:
+        branch: master

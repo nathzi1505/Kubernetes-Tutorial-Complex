@@ -17,6 +17,6 @@ docker push nathzi1505/multidockertutorial-worker:$SHA
 kubectl apply -f k8s
 
 # Imperatively set image to latest images
-kubectl set image deployments/client-deployment client=multidockertutorial-client:$SHA
-kubectl set image deployments/server-deployment server=multidockertutorial-server:$SHA
-kubectl set image deployments/worker-deployment worker=multidockertutorial-worker:$SHA
+kubectl set image deployments/client-deployment client=nathzi1505/multidockertutorial-client:$SHA
+kubectl set image deployments/server-deployment server=nathzi1505/multidockertutorial-server:$SHA
+kubectl set image deployments/worker-deployment worker=nathzi1505/multidockertutorial-worker:$SHA

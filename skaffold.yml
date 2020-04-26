@@ -1,0 +1,40 @@
+apiVersion: skaffold/v1beta2
+
+kind: Config
+
+build: 
+    local:
+        push: false # By default skaffold pushes images to DockerHub
+    artifacts:
+        - image: nathzi1505/multidockertutorial-client
+          context: client
+          docker:
+            dockerfile: Dockerfile.dev
+          sync: # Mode #2 - Injects new files to the pod
+            '**/*.js': .
+            '**/*.css': .
+            '**/*.html': .
+        - image: nathzi1505/multidockertutorial-server
+          context: server
+          docker:
+            dockerfile: Dockerfile.dev
+          sync: # Mode #2 - Injects new files to the pod
+                '**/*.js': .
+        - image: nathzi1505/multidockertutorial-worker
+          context: worker
+          docker:
+            dockerfile: Dockerfile.dev
+          sync: # Mode #2 - Injects new files to the pod
+                '**/*.js': .
+
+deploy:
+    kubectl:
+        manifests:
+            - k8s/client-deployment.yml
+            - k8s/server-deployment.yml
+            - k8s/worker-deployment.yml
+            - k8s/server-cluster-ip-service.yml
+            - k8s/client-cluster-ip-service.yml
+            # Note: Do not add persistent data stores
+
+# Note: Skaffold uses nodemon for node.js runtime 
